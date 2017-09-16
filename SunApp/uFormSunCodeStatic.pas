@@ -19,6 +19,9 @@ var
 
 implementation
 
+uses
+  uFmxCanvasHelper;
+
 {$R *.fmx}
 
 procedure TForm1.PaintBox1Paint(Sender: TObject; Canvas: TCanvas);
@@ -30,36 +33,27 @@ const
   RAY_COUNT       = 12;
   RAY_LENGTH      = 100;
   RAY_THICKNESS   = 3;
-var aRect         : TRectF;
-    x, y, r, angle: Double;
-    I             : Integer;
-    a, b          : TPointF;
+var angle: Double;
+    I    : Integer;
+    a, b : TPointF;
 begin
   Canvas.BeginScene;
   try
     // draw blue sky
-    Canvas.Fill.Color := TAlphaColorRec.Skyblue;
-    Canvas.FillRect(PaintBox1.BoundsRect, 0, 0, [], DEFAULT_OPACITY);
+    Canvas.SolidRect(PaintBox1.BoundsRect, TAlphaColorRec.Skyblue);
 
     // draw yellow sun solid circle
-    Canvas.Fill.Color := TAlphaColorRec.Yellow;
-    Canvas.Fill.Kind := TBrushKind.Solid;
-    x := POS_X;
-    y := POS_Y;
-    r := SUN_RADIUS;
-    aRect := RectF(x-r, y-r, x+r, y+r);
-    Canvas.FillEllipse(aRect, DEFAULT_OPACITY);
+    Canvas.SolidCircle(PointF(POS_X, POS_Y), SUN_RADIUS, TAlphaColorRec.Yellow);
 
     // draw sun rays
-    Canvas.Stroke.Color := TAlphaColorRec.Yellow;
-    Canvas.Stroke.Kind := TBrushKind.Solid;
-    Canvas.Stroke.Thickness := RAY_THICKNESS;
     for I := 0 to RAY_COUNT-1 do
     begin
       angle := I*2*pi/RAY_COUNT;
-      a := PointF(x, y);
-      b := PointF(x + RAY_LENGTH * cos(angle), y + RAY_LENGTH * sin(angle));
-      Canvas.DrawLine(a, b, DEFAULT_OPACITY);
+      a := PointF(POS_X, POS_Y);
+      b := PointF(
+          POS_X + RAY_LENGTH * cos(angle),
+          POS_Y + RAY_LENGTH * sin(angle));
+      Canvas.Line(a, b, TAlphaColorRec.Yellow, RAY_THICKNESS);
     end;
   finally
     Canvas.EndScene;

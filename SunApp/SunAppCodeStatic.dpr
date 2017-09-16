@@ -3,7 +3,8 @@ program SunAppCodeStatic;
 uses
   System.StartUpCopy,
   FMX.Forms,
-  uFormSunCodeStatic in 'uFormSunCodeStatic.pas' {Form1};
+  uFormSunCodeStatic in 'uFormSunCodeStatic.pas' {Form1},
+  uFmxCanvasHelper in 'uFmxCanvasHelper.pas';
 
 {$R *.res}
 
