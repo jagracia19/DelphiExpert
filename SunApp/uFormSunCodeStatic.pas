@@ -9,8 +9,12 @@ uses
 type
   TForm1 = class(TForm)
     PaintBox1: TPaintBox;
+    Timer1: TTimer;
     procedure PaintBox1Paint(Sender: TObject; Canvas: TCanvas);
+    procedure FormCreate(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
   private
+    FSunPosY: Double;
   public
   end;
 
@@ -24,6 +28,14 @@ uses
 
 {$R *.fmx}
 
+const
+  END_SUN_POS_Y = 150;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  FSunPosY := Height + 150;
+end;
+
 procedure TForm1.PaintBox1Paint(Sender: TObject; Canvas: TCanvas);
 const
   DEFAULT_OPACITY = 1;
@@ -36,27 +48,40 @@ const
 var angle: Double;
     I    : Integer;
     a, b : TPointF;
+    x, y : Double;
 begin
   Canvas.BeginScene;
   try
     // draw blue sky
     Canvas.SolidRect(PaintBox1.BoundsRect, TAlphaColorRec.Skyblue);
 
+    x := POS_X;
+    y := FSunPosY;
+
     // draw yellow sun solid circle
-    Canvas.SolidCircle(PointF(POS_X, POS_Y), SUN_RADIUS, TAlphaColorRec.Yellow);
+    Canvas.SolidCircle(PointF(x, y), SUN_RADIUS, TAlphaColorRec.Yellow);
 
     // draw sun rays
     for I := 0 to RAY_COUNT-1 do
     begin
       angle := I*2*pi/RAY_COUNT;
-      a := PointF(POS_X, POS_Y);
+      a := PointF(x, y);
       b := PointF(
-          POS_X + RAY_LENGTH * cos(angle),
-          POS_Y + RAY_LENGTH * sin(angle));
+          x + RAY_LENGTH * cos(angle),
+          y + RAY_LENGTH * sin(angle));
       Canvas.Line(a, b, TAlphaColorRec.Yellow, RAY_THICKNESS);
     end;
   finally
     Canvas.EndScene;
+  end;
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+begin
+  if FSunPosY > END_SUN_POS_Y then
+  begin
+    FSunPosY := FSunPosY - 10;
+    Invalidate;
   end;
 end;
 
