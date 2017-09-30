@@ -4,15 +4,18 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
-  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Objects;
+  FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Objects,
+  FMX.Controls.Presentation, FMX.StdCtrls;
 
 type
   TForm1 = class(TForm)
     PaintBox1: TPaintBox;
     Timer1: TTimer;
+    btnSunrise: TButton;
     procedure PaintBox1Paint(Sender: TObject; Canvas: TCanvas);
-    procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure btnSunriseClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     FSunPosY: Double;
   public
@@ -31,9 +34,21 @@ uses
 const
   END_SUN_POS_Y = 150;
 
+procedure TForm1.btnSunriseClick(Sender: TObject);
+begin
+  Timer1.Enabled := True;
+end;
+
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  FSunPosY := Height + 150;
+  Timer1.Enabled := False;
+  {$IFDEF MSWINDOWS}
+  FSunPosY := Height + 150
+  {$ENDIF}
+  {$IFDEF ANDROID}
+    // Height = 0
+    FSunPosY := 800;
+  {$ENDIF}
 end;
 
 procedure TForm1.PaintBox1Paint(Sender: TObject; Canvas: TCanvas);
