@@ -10,6 +10,8 @@ object FormSunCodeShape: TFormSunCodeShape
   OnCreate = FormCreate
   OnMouseDown = FormMouseDown
   OnMouseUp = FormMouseUp
+  Touch.InteractiveGestures = [Rotate]
+  OnGesture = FormGesture
   DesignerMasterStyle = 0
   object rectSky: TRectangle
     Align = Client

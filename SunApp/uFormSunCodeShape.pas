@@ -32,10 +32,13 @@ type
       Shift: TShiftState; X, Y: Single);
     procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Single);
+    procedure FormGesture(Sender: TObject; const EventInfo: TGestureEventInfo;
+      var Handled: Boolean);
   private
     FReady: Boolean;
     FDown: TPointF;
     FMoving: Boolean;
+    FLastAngle: Double;
   public
   end;
 
@@ -61,6 +64,18 @@ begin
   {$IFDEF ANDROID}
     FloatAnimation1.StartValue := 800; // Heigh is 0
   {$ENDIF}
+end;
+
+procedure TFormSunCodeShape.FormGesture(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+begin
+  if EventInfo.GestureID = igiRotate then
+  begin
+    if TInteractiveGestureFlag.gfBegin in EventInfo.Flags then
+      FLastAngle := circleSun.RotationAngle
+    else if EventInfo.Angle <> 0 then
+      circleSun.RotationAngle := FLastAngle - (EventInfo.Angle * 180) / Pi;
+  end;
 end;
 
 procedure TFormSunCodeShape.FormMouseDown(Sender: TObject; Button: TMouseButton;
