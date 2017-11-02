@@ -8,18 +8,22 @@ object FormSunCodeShape: TFormSunCodeShape
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
+  OnMouseDown = FormMouseDown
+  OnMouseUp = FormMouseUp
   DesignerMasterStyle = 0
   object rectSky: TRectangle
     Align = Client
     Fill.Color = claSkyblue
+    HitTest = False
     RotationCenter.X = 0.000000000000000000
     RotationCenter.Y = 0.000000000000000000
     Size.Width = 489.000000000000000000
     Size.Height = 641.000000000000000000
     Size.PlatformDefault = False
   end
-  object cicleSun: TCircle
+  object circleSun: TCircle
     Fill.Color = claYellow
+    HitTest = False
     Position.X = 100.000000000000000000
     Position.Y = 100.000000000000000000
     Size.Width = 100.000000000000000000
@@ -196,6 +200,7 @@ object FormSunCodeShape: TFormSunCodeShape
       Enabled = True
       Duration = 2.000000000000000000
       Interpolation = Sinusoidal
+      OnFinish = FloatAnimation1Finish
       PropertyName = 'Position.Y'
       StartValue = 600.000000000000000000
       StopValue = 100.000000000000000000

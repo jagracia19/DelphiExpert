@@ -10,7 +10,7 @@ uses
 type
   TFormSunCodeShape = class(TForm)
     rectSky: TRectangle;
-    cicleSun: TCircle;
+    circleSun: TCircle;
     LineRay01: TLine;
     LineRay02: TLine;
     LineRay03: TLine;
@@ -27,10 +27,16 @@ type
     FloatAnimation1: TFloatAnimation;
     GlowEffect1: TGlowEffect;
     procedure FormCreate(Sender: TObject);
+    procedure FloatAnimation1Finish(Sender: TObject);
+    procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
+    procedure FormMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Single);
   private
-    { Private declarations }
+    FReady: Boolean;
+    FDown: TPointF;
+    FMoving: Boolean;
   public
-    { Public declarations }
   end;
 
 var
@@ -40,14 +46,42 @@ implementation
 
 {$R *.fmx}
 
+procedure TFormSunCodeShape.FloatAnimation1Finish(Sender: TObject);
+begin
+  FReady := True;
+end;
+
 procedure TFormSunCodeShape.FormCreate(Sender: TObject);
 begin
+  FMoving := False;
+  FReady := False;
   {$IFDEF MSWINDOWS}
   FloatAnimation1.StartValue := Height + 150;
   {$ENDIF}
   {$IFDEF ANDROID}
     FloatAnimation1.StartValue := 800; // Heigh is 0
   {$ENDIF}
+end;
+
+procedure TFormSunCodeShape.FormMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+begin
+  if FReady then
+  begin
+    FDown := PointF(X, Y);
+    FMoving := True;
+  end;
+end;
+
+procedure TFormSunCodeShape.FormMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Single);
+begin
+  if FMoving then
+  begin
+    circleSun.Position.X := circleSun.Position.X + (X - FDown.X);
+    circleSun.Position.Y := circleSun.Position.Y + (Y - FDown.Y);
+  end;
+
 end;
 
 end.
